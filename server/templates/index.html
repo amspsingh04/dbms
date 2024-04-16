@@ -33,7 +33,21 @@
             <!-- The table rows will be populated with content -->
         </tbody>
     </table>
+    <!-- Add Data Button (initially hidden) -->
+    <button id="add-data-button" style="display: none;">Add Data</button>
 
+    <!-- Modal for adding data (hidden by default and will be toggled by JavaScript) -->
+    <div id="add-data-modal" class="modal" style="display: none;">
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <form id="add-data-form">
+                <!-- Dynamic form fields will be injected here -->
+            </form>
+            <button id="submit-data-button">Submit Data</button>
+        </div>
+    </div>
+    
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, abort, jsonify, render_template, request
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -16,7 +16,23 @@ DATABASE = {
 def get_db_connection():
     conn = psycopg2.connect(**DATABASE)
     return conn
-
+def add_data(table_name, fields, values):
+    query = f"INSERT INTO {table_name} ({', '.join(fields)}) VALUES ({', '.join(['%s'] * len(fields))});"
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(query, values)
+        conn.commit()
+    except psycopg2.IntegrityError as e: # Handle violations of unique constraints, not-null, etc.
+        conn.rollback()
+        return jsonify({'error': str(e)}), 400
+    except (Exception, psycopg2.DatabaseError) as e:
+        conn.rollback()
+        return jsonify({'error': 'An error occurred: ' + str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+    return jsonify({'success': f'{table_name.capitalize()} added successfully.'}), 201
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -119,6 +135,88 @@ def get_enrollments():
     cursor.close()
     conn.close()
     return jsonify(enrollments)
+
+@app.route('/add_student', methods=['POST'])
+def add_student():
+    data = request.json
+    required_fields = ['name', 'age', 'major']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('student', required_fields, values)
+
+# Route for adding a book
+@app.route('/add_book', methods=['POST'])
+def add_book():
+    data = request.json
+    required_fields = ['title', 'author', 'isbn']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('book', required_fields, values)
+
+# Route for adding a course
+@app.route('/add_course', methods=['POST'])
+def add_course():
+    data = request.json
+    required_fields = ['name', 'department', 'credits']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('course', required_fields, values)
+
+# Route for adding a faculty member
+@app.route('/add_faculty', methods=['POST'])
+def add_faculty():
+    data = request.json
+    required_fields = ['name', 'department']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('faculty', required_fields, values)
+
+# Route for adding a menu item
+# ... Repeat the pattern above for other data types ...
+
+# Route for adding a hostel entry
+@app.route('/add_hostel', methods=['POST'])
+def add_hostel():
+    data = request.json
+    required_fields = ['name', 'capacity']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('hostel', required_fields, values)
+
+# Route for adding a maintenance request
+@app.route('/add_maintenance', methods=['POST'])
+def add_maintenance():
+    data = request.json
+    required_fields = ['issue', 'location', 'reported_by']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('maintenance', required_fields, values)
+
+# Route for adding a borrow record
+@app.route('/add_borrow', methods=['POST'])
+def add_borrow():
+    data = request.json
+    required_fields = ['student_id', 'book_id', 'borrow_date']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('borrow', required_fields, values)
+
+# Route for adding an enrollment record
+@app.route('/add_enrollment', methods=['POST'])
+def add_enrollment():
+    data = request.json
+    required_fields = ['student_id', 'course_id']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('enrollment', required_fields, values)
 
 if __name__ == '__main__':
     app.run(debug=True)

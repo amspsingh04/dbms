@@ -8,6 +8,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
+    <h1>University Dashboard</h1>
+    
     <select id="data-selector">
         <option value="">Select Data</option>
         <option value="student">Student</option>
@@ -22,6 +24,20 @@
         <option value="enrollment">Enrollment</option>
         <!-- Add more options as needed -->
     </select>
+
+    
+
+
+    <table id="data-table">
+        <thead>
+            <tr>
+                <!-- The table headers will be populated with column names -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- The table rows will be populated with content -->
+        </tbody>
+    </table>
 
     <button id="add-data-button" style="display:none;">Add Data</button>
 
@@ -39,18 +55,6 @@
           </form>
         </div>
       </div>
-
-
-    <table id="data-table">
-        <thead>
-            <tr>
-                <!-- The table headers will be populated with column names -->
-            </tr>
-        </thead>
-        <tbody>
-            <!-- The table rows will be populated with content -->
-        </tbody>
-    </table>
     
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

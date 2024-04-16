@@ -8,11 +8,20 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
-    <h1>University Dashboard</h1>
-    <button id="load-students">Load Students</button>
-    <button id="load-books">Load Books</button>
-    <button id="load-courses">Load Courses</button>
-    <!-- ... More buttons for other data sets -->
+    <select id="data-selector">
+        <option value="">Select Data</option>
+        <option value="students">Students</option>
+        <option value="books">Books</option>
+        <option value="courses">Courses</option>
+        <option value="faculty">Faculty</option>
+        <option value="menu">Menu</option>
+        <option value="mess">Mess</option>
+        <option value="hostels">Hostel</option>
+        <option value="maintenance">Maintenance</option>
+        <option value="borrow">Borrow</option>
+        <option value="enrollments">Enrollment</option>
+        <!-- Add more options as needed -->
+    </select>
 
     <table id="data-table">
         <thead>

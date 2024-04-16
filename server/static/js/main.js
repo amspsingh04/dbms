@@ -25,25 +25,24 @@ $(document).ready(function() {
                     rowHtml += '</tr>';
                     $table.find('tbody').append(rowHtml);
                 }
+            } else {
+                // No data found message or empty state can be displayed here
+                $table.find('tbody').append('<tr><td colspan="' + headers.length + '">No data available.</td></tr>');
             }
         }).fail(function(jqXHR, textStatus, errorThrown) {
             console.error('Error fetching data: ' + textStatus);
-            // Optionally alert the user to the error here.
+            // Optionally alert the user to the error here, for example:
+            // alert('Failed to fetch data. Please try again later.');
+            $table.find('tbody').append('<tr><td colspan="' + headers.length + '">Error fetching data. Please try again later.</td></tr>');
         });
     }
 
-    // Event handlers for buttons
-    $('#load-students').click(function() {
-        loadData('/students');
+    // Event handler for the dropdown's change event
+    $('#data-selector').change(function() {
+        const selectedData = $(this).val();
+        if (selectedData) {
+            loadData('/' + selectedData);
+        }
     });
-
-    $('#load-books').click(function() {
-        loadData('/books');
-    });
-
-    $('#load-courses').click(function() {
-        loadData('/courses');
-    });
-
-    // Add similar click handlers for other buttons and endpoints.
 });
+

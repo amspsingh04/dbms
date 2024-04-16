@@ -1,0 +1,30 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>University Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>University Dashboard</h1>
+    <button id="load-students">Load Students</button>
+    <button id="load-books">Load Books</button>
+    <button id="load-courses">Load Courses</button>
+    <!-- ... More buttons for other data sets -->
+
+    <table id="data-table">
+        <thead>
+            <tr>
+                <!-- The table headers will be populated with column names -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- The table rows will be populated with content -->
+        </tbody>
+    </table>
+
+    <script src=".\static\js\main.js"></script>
+</body>
+</html>

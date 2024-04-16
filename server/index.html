@@ -1,22 +1,44 @@
 <!-- /templates/index.html -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <title>Menu Management</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Welcome to Menu Management System</h1>
     <nav>
         <ul>
             <li><a href="{{ url_for('get_menu') }}">View Menu</a></li>
-            <!-- Add more navigation items as needed -->
+            <!-- You can add more navigation items here if needed -->
         </ul>
     </nav>
-    <!-- Content here -->
+
+    <h2>Menu for {{ current_day }}</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Time of Day</th>
+                <th>Mess Name</th>
+                <th>Items</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in menu_entries %}
+            <tr>
+                <td>{{ entry.timeOfDay }}</td>
+                <td>{{ entry.messName }}</td>
+                <td>{{ entry.items }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
     <footer>
         <p>Footer content</p>
     </footer>
-    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    
+    <script src="script.js"></script>
 </body>
 </html>

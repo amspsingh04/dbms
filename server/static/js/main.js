@@ -81,7 +81,7 @@ $(document).ready(function() {
                 { name: 'requestId', type: 'number', placeholder: 'Request ID' },
                 { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' },
                 { name: 'roomId', type: 'number', placeholder: 'Room ID' },
-                { name: 'request_date', type: 'text', placeholder: 'Request Date' },
+                { name: 'request_date', type: 'date', placeholder: 'Request Date' },
                 { name: 'status', type: 'text', placeholder: 'Status' },
                 { name: 'description', type: 'text', placeholder: 'Description' },
                 { name: 'studentId', type: 'number', placeholder: 'Student ID' }

@@ -165,7 +165,7 @@ def add_course():
 @app.route('/add_faculty', methods=['POST'])
 def add_faculty():
     data = request.json
-    required_fields = ['facultyid','email', 'name']
+    required_fields = ['facultyId','email', 'name']
     values = [data.get(field) for field in required_fields]
     
     return add_data('faculty', required_fields, values)
@@ -177,7 +177,7 @@ def add_hostel():
     values = [data.get(field) for field in required_fields]
     # Simplified condition to check for missing values
     
-    return add_data('menu', required_fields, values)
+    return add_data('hostel', required_fields, values)
 
 @app.route('/add_menu', methods=['POST'])
 def add_menu():
@@ -192,7 +192,7 @@ def add_menu():
 @app.route('/add_maintenance', methods=['POST'])
 def add_maintenance():
     data = request.json
-    required_fields = ['hostelId', 'roomId', 'request_date', 'status', 'description', 'studentId']
+    required_fields = ['requestId','hostelId', 'roomId', 'request_date', 'status', 'description', 'studentId']
     values = [data.get(field) for field in required_fields]
     
     return add_data('maintenance', required_fields, values)

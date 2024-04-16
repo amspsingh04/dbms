@@ -1,4 +1,3 @@
-// static/js/main.js
 $(document).ready(function() {
     function loadData(endpoint) {
         $.getJSON(endpoint, function(data) {
@@ -7,110 +6,144 @@ $(document).ready(function() {
             $table.find('tbody').empty();
             
             if (data.length > 0) {
-                // Create headers
                 const headers = Object.keys(data[0]);
                 let headerRow = '<tr>';
-                for (let header of headers) {
+                headers.forEach(header => {
                     headerRow += `<th>${header}</th>`;
-                }
+                });
                 headerRow += '</tr>';
                 $table.find('thead').append(headerRow);
 
-                // Append data to table
-                for (let row of data) {
+                data.forEach(row => {
                     let rowHtml = '<tr>';
-                    for (let header of headers) {
+                    headers.forEach(header => {
                         rowHtml += `<td>${row[header]}</td>`;
-                    }
+                    });
                     rowHtml += '</tr>';
                     $table.find('tbody').append(rowHtml);
-                }
+                });
             } else {
-                // No data found message or empty state can be displayed here
                 $table.find('tbody').append('<tr><td colspan="' + headers.length + '">No data available.</td></tr>');
             }
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.error('Error fetching data: ' + textStatus);
-            // Optionally alert the user to the error here, for example:
-            // alert('Failed to fetch data. Please try again later.');
+        }).fail(function() {
             $table.find('tbody').append('<tr><td colspan="' + headers.length + '">Error fetching data. Please try again later.</td></tr>');
         });
     }
-
+    
     $('#data-selector').change(function() {
         const selectedData = $(this).val();
         if (selectedData) {
-            // Show the Add Data button when a data type is selected
             $('#add-data-button').show();
-
-            // Optionally: Load the data for the selected data type
             loadData('/' + selectedData);
-
-            // ... You can also load the form structure for the modal here, if needed ...
         } else {
-            // Hide the Add Data button when no data type is selected
             $('#add-data-button').hide();
         }
     });
-
-    // Event handler for 'Add Data' button click
-    $('#add-data-button').click(function() {
-        // Clear previous form
+    
+    function populateForm(selectedDataType) {
         $('#add-data-form').empty();
-
-        // Show the modal window
-        $('#add-data-modal').show();
-
-        // Logic to add input fields based on the selected data type
-        const selectedDataType = $('#data-selector').val();
-        if (selectedDataType) {
-            // This is just an example, you'll need endpoint(s) to get form fields dynamically from the backend
-            const formFieldsByDataType = {
-                'students': [
-                    { name: 'name', type: 'text', placeholder: 'Enter name' },
-                    { name: 'email', type: 'email', placeholder: 'Enter email' },
-                    { name: 'hostelId', type: 'number', placeholder: 'Enter Hostel ID' }
-                ],
-                // Define similar structure for other data types...
-            };
-
-            const fields = formFieldsByDataType[selectedDataType];
-            if (fields) {
-                for (let field of fields) {
-                    let inputHtml = `<label for="${field.name}">${field.placeholder}</label><input type="${field.type}" id="${field.name}" name="${field.name}" required placeholder="${field.placeholder}">`;
-                    $('#add-data-form').append(inputHtml);
-                }
-            }
-        }
-    });
-
-    // Event handler for 'Submit Data' button click (within the modal form)
-    $('#submit-data-button').click(function(e) {
-        e.preventDefault(); // Prevent default form submission
-
-        const selectedDataType = $('#data-selector').val();
-        const endpoint = '/add_' + selectedDataType; // Make sure this matches your Flask route
-        const formData = {};
+        const formFieldsByDataType = {
+            'student': [
+                { name: 'studentId', type: 'number', placeholder: 'Student ID' },
+                { name: 'name', type: 'text', placeholder: 'Name' },
+                { name: 'email', type: 'email', placeholder: 'Email' },
+                { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' }
+            ],
+            'book': [
+                { name: 'isbn', type: 'text', placeholder: 'ISBN' },
+                { name: 'title', type: 'text', placeholder: 'Title' },
+                { name: 'author', type: 'text', placeholder: 'Author' }
+            ],
+            'course': [
+                { name: 'courseId', type: 'number', placeholder: 'Course ID' },
+                { name: 'title', type: 'text', placeholder: 'Course Title' },
+                { name: 'facultyId', type: 'number', placeholder: 'Faculty ID' }
+            ],
+            'faculty': [
+                { name: 'facultyId', type: 'number', placeholder: 'Faculty ID' },
+                { name: 'name', type: 'text', placeholder: 'Name' },
+                { name: 'email', type: 'email', placeholder: 'Email' }
+            ],
+            'menu': [
+                { name: 'day', type: 'text', placeholder: 'Day' },
+                { name: 'timeOfDay', type: 'text', placeholder: 'Time Of Day' },
+                { name: 'messName', type: 'text', placeholder: 'Mess Name' },
+                { name: 'items', type: 'text', placeholder: 'Items' }
+            ],
+            'hostel': [
+                { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' },
+                { name: 'name', type: 'text', placeholder: 'Name' },
+                { name: 'capacity', type: 'number', placeholder: 'Capacity' },
+                { name: 'location', type: 'text', placeholder: 'Location' }
+            ],
+            'maintenance': [
+                { name: 'requestId', type: 'number', placeholder: 'Request ID' },
+                { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' },
+                { name: 'roomId', type: 'number', placeholder: 'Room ID' },
+                { name: 'request_date', type: 'date', placeholder: 'Request Date' },
+                { name: 'status', type: 'text', placeholder: 'Status' },
+                { name: 'description', type: 'text', placeholder: 'Description' },
+                { name: 'studentId', type: 'number', placeholder: 'Student ID' }
+            ],
+            'borrow': [
+                { name: 'isbn', type: 'text', placeholder: 'ISBN' },
+                { name: 'studentId', type: 'number', placeholder: 'Student ID' },
+                { name: 'dueDate', type: 'date', placeholder: 'Due Date' },
+                { name: 'lateFees', type: 'number', placeholder: 'Late Fees' },
+                { name: 'returnDate', type: 'date', placeholder: 'Return Date' }
+            ],
+            'enrollment': [
+                { name: 'studentId', type: 'number', placeholder: 'Student ID' },
+                { name: 'courseId', type: 'number', placeholder: 'Course ID' }
+            ],
+            'mess': [
+                { name: 'messName', type: 'text', placeholder: 'Mess Name' },
+                { name: 'location', type: 'text', placeholder: 'Location' },
+                { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' }
+            ]
+        };
         
-        $('#add-data-form').find('input').each(function () {
-            formData[$(this).attr('name')] = $(this).val();
-        });
-
+        const fields = formFieldsByDataType[selectedDataType];
+        if (fields) {
+            fields.forEach(field => {
+                let inputHtml = `<label for="${field.name}">${field.placeholder}</label>` +
+                    `<input type="${field.type}" id="${field.name}" name="${field.name}" required placeholder="${field.placeholder}"><br>`;
+                $('#add-data-form').append(inputHtml);
+            });
+        }
+    }
+    
+    $('#add-data-button').click(function() {
+        const selectedDataType = $('#data-selector').val();
+        populateForm(selectedDataType);
+        $('#add-data-modal').show();
+    });
+    $('.close').click(function() {
+        $('#add-data-modal').hide(); // Use .hide() to hide the modal
+    });
+    
+    $('#add-data-form').on('submit', function(e) {
+        e.preventDefault();
+        const selectedDataType = $('#data-selector').val();
+        const endpoint = '/add_' + selectedDataType;
+        const formData = $(this).serializeArray().reduce(function(obj, item) {
+            obj[item.name] = item.value;
+            return obj;
+        }, {});
+        
         $.ajax({
             url: endpoint,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(formData),
-            success: function(response) {
+            success: function() {
                 alert('Data added successfully!');
                 $('#add-data-modal').hide();
-                loadData('/' + selectedDataType); // Reload the data table
+                loadData('/' + selectedDataType);
             },
             error: function(response) {
                 alert('Error adding data: ' + response.responseText);
             }
         });
     });
-
-    // Rest of the code
 });

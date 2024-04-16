@@ -66,27 +66,28 @@ button:hover {
 /* Add to your existing static/css/style.css file */
 
 /* The Modal (background) */
+/* Style the modal (background) */
 .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the modal */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
     height: 100%; /* Full height */
     overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+    padding-top: 60px;
 }
 
 /* Modal Content/Box */
 .modal-content {
     background-color: #fefefe;
-    margin: auto;
+    margin: 5% auto; /* 5% from the top and centered */
     padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    width: 80%; /* Could be more or less, depending on screen size */
 }
 
 /* The Close Button */
@@ -102,4 +103,18 @@ button:hover {
     color: black;
     text-decoration: none;
     cursor: pointer;
+}
+
+input[type=submit] {
+    padding: 10px 15px;
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px; /* Add some space above the submit button */
+}
+
+input[type=submit]:hover {
+    background-color: #4cae4c; /* Darken the button a bit when hovered */
 }

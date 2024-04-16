@@ -16,6 +16,7 @@ DATABASE = {
 def get_db_connection():
     conn = psycopg2.connect(**DATABASE)
     return conn
+
 def add_data(table_name, fields, values):
     query = f"INSERT INTO {table_name} ({', '.join(fields)}) VALUES ({', '.join(['%s'] * len(fields))});"
     conn = get_db_connection()
@@ -139,7 +140,7 @@ def get_enrollments():
 @app.route('/add_student', methods=['POST'])
 def add_student():
     data = request.json
-    required_fields = ['name', 'age', 'major']
+    required_fields = ['name', 'email', 'hostelId']
     values = [data.get(field) for field in required_fields]
     if not all(values):
         abort(400, 'Missing data fields')
@@ -149,7 +150,7 @@ def add_student():
 @app.route('/add_book', methods=['POST'])
 def add_book():
     data = request.json
-    required_fields = ['title', 'author', 'isbn']
+    required_fields = ['isbn', 'title', 'author']
     values = [data.get(field) for field in required_fields]
     if not all(values):
         abort(400, 'Missing data fields')
@@ -159,7 +160,7 @@ def add_book():
 @app.route('/add_course', methods=['POST'])
 def add_course():
     data = request.json
-    required_fields = ['name', 'department', 'credits']
+    required_fields = ['title', 'facultyId']
     values = [data.get(field) for field in required_fields]
     if not all(values):
         abort(400, 'Missing data fields')
@@ -169,20 +170,27 @@ def add_course():
 @app.route('/add_faculty', methods=['POST'])
 def add_faculty():
     data = request.json
-    required_fields = ['name', 'department']
+    required_fields = ['email', 'name']
     values = [data.get(field) for field in required_fields]
     if not all(values):
         abort(400, 'Missing data fields')
     return add_data('faculty', required_fields, values)
 
 # Route for adding a menu item
-# ... Repeat the pattern above for other data types ...
+@app.route('/add_menu', methods=['POST'])
+def add_menu():
+    data = request.json
+    required_fields = ['day', 'timeOfDay', 'messName', 'items']
+    values = [data.get(field) for field in required_fields]
+    if not all(values) or not all(values[:3]):  # Ensuring day, timeOfDay, and messName are not empty
+        abort(400, 'Missing required data fields')
+    return add_data('menu', required_fields, values)
 
-# Route for adding a hostel entry
+# Route for adding a hostel
 @app.route('/add_hostel', methods=['POST'])
 def add_hostel():
     data = request.json
-    required_fields = ['name', 'capacity']
+    required_fields = ['name', 'capacity', 'location']
     values = [data.get(field) for field in required_fields]
     if not all(values):
         abort(400, 'Missing data fields')
@@ -192,7 +200,7 @@ def add_hostel():
 @app.route('/add_maintenance', methods=['POST'])
 def add_maintenance():
     data = request.json
-    required_fields = ['issue', 'location', 'reported_by']
+    required_fields = ['hostelId', 'roomId', 'request_date', 'status', 'description', 'studentId']
     values = [data.get(field) for field in required_fields]
     if not all(values):
         abort(400, 'Missing data fields')
@@ -202,9 +210,9 @@ def add_maintenance():
 @app.route('/add_borrow', methods=['POST'])
 def add_borrow():
     data = request.json
-    required_fields = ['student_id', 'book_id', 'borrow_date']
+    required_fields = ['isbn', 'studentId', 'dueDate', 'lateFees', 'returnDate']
     values = [data.get(field) for field in required_fields]
-    if not all(values):
+    if not values[0] or not values[1]:  # isbn and studentId cannot be empty
         abort(400, 'Missing data fields')
     return add_data('borrow', required_fields, values)
 
@@ -212,11 +220,40 @@ def add_borrow():
 @app.route('/add_enrollment', methods=['POST'])
 def add_enrollment():
     data = request.json
-    required_fields = ['student_id', 'course_id']
+    required_fields = ['studentId', 'courseId']
     values = [data.get(field) for field in required_fields]
     if not all(values):
         abort(400, 'Missing data fields')
     return add_data('enrollment', required_fields, values)
+
+# Route for adding a mess
+@app.route('/add_mess', methods=['POST'])
+def add_mess():
+    data = request.json
+    required_fields = ['messName', 'location', 'hostelId']
+    values = [data.get(field) for field in required_fields]
+    if not all(values):
+        abort(400, 'Missing data fields')
+    return add_data('mess', required_fields, values)
+
+# Generic function to add data to any table
+def add_data(table_name, fields, values):
+    query = f"INSERT INTO {table_name} ({', '.join(fields)}) VALUES ({', '.join(['%s'] * len(fields))});"
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute(query, values)
+        conn.commit()
+    except psycopg2.IntegrityError as e:
+        conn.rollback()
+        return jsonify({'error': str(e)}), 400
+    except psycopg2.DatabaseError as e:
+        conn.rollback()
+        return jsonify({'error': 'An error occurred: ' + str(e)}), 500
+    finally:
+        cursor.close()
+        conn.close()
+    return jsonify({'success': f'{table_name.capitalize()} added successfully.'}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)

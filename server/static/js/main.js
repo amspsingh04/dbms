@@ -4,7 +4,6 @@ $(document).ready(function() {
             const $table = $('#data-table');
             $table.find('thead').empty();
             $table.find('tbody').empty();
-            
             if (data.length > 0) {
                 const headers = Object.keys(data[0]);
                 let headerRow = '<tr>';
@@ -13,7 +12,6 @@ $(document).ready(function() {
                 });
                 headerRow += '</tr>';
                 $table.find('thead').append(headerRow);
-
                 data.forEach(row => {
                     let rowHtml = '<tr>';
                     headers.forEach(header => {
@@ -29,7 +27,6 @@ $(document).ready(function() {
             $table.find('tbody').append('<tr><td colspan="' + headers.length + '">Error fetching data. Please try again later.</td></tr>');
         });
     }
-    
     $('#data-selector').change(function() {
         const selectedData = $(this).val();
         if (selectedData) {
@@ -39,7 +36,6 @@ $(document).ready(function() {
             $('#add-data-button').hide();
         }
     });
-    
     function populateForm(selectedDataType) {
         $('#add-data-form').empty();
         const formFieldsByDataType = {
@@ -102,7 +98,6 @@ $(document).ready(function() {
                 { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' }
             ]
         };
-        
         const fields = formFieldsByDataType[selectedDataType];
         if (fields) {
             fields.forEach(field => {
@@ -110,18 +105,17 @@ $(document).ready(function() {
                     `<input type="${field.type}" id="${field.name}" name="${field.name}" required placeholder="${field.placeholder}"><br>`;
                 $('#add-data-form').append(inputHtml);
             });
+            $('#add-data-form').append(`<input type="submit" id="submit-button" value="Submit Data">`);
         }
     }
-    
     $('#add-data-button').click(function() {
         const selectedDataType = $('#data-selector').val();
         populateForm(selectedDataType);
         $('#add-data-modal').show();
     });
     $('.close').click(function() {
-        $('#add-data-modal').hide(); // Use .hide() to hide the modal
+        $('#add-data-modal').hide();
     });
-    
     $('#add-data-form').on('submit', function(e) {
         e.preventDefault();
         const selectedDataType = $('#data-selector').val();
@@ -130,7 +124,6 @@ $(document).ready(function() {
             obj[item.name] = item.value;
             return obj;
         }, {});
-        
         $.ajax({
             url: endpoint,
             type: 'POST',

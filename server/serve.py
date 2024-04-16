@@ -166,7 +166,6 @@ def add_course():
         abort(400, 'Missing data fields')
     return add_data('course', required_fields, values)
 
-# Route for adding a faculty member
 @app.route('/add_faculty', methods=['POST'])
 def add_faculty():
     data = request.json
@@ -176,17 +175,16 @@ def add_faculty():
         abort(400, 'Missing data fields')
     return add_data('faculty', required_fields, values)
 
-# Route for adding a menu item
 @app.route('/add_menu', methods=['POST'])
 def add_menu():
-    data = request.json
+    data = request.json  # Ensure data is defined
     required_fields = ['day', 'timeOfDay', 'messName', 'items']
     values = [data.get(field) for field in required_fields]
-    if not all(values) or not all(values[:3]):  # Ensuring day, timeOfDay, and messName are not empty
+    # Simplified condition to check for missing values
+    if not all(values):
         abort(400, 'Missing required data fields')
     return add_data('menu', required_fields, values)
 
-# Route for adding a hostel
 @app.route('/add_hostel', methods=['POST'])
 def add_hostel():
     data = request.json
@@ -212,7 +210,8 @@ def add_borrow():
     data = request.json
     required_fields = ['isbn', 'studentId', 'dueDate', 'lateFees', 'returnDate']
     values = [data.get(field) for field in required_fields]
-    if not values[0] or not values[1]:  # isbn and studentId cannot be empty
+    # The original if condition checks that the first two values are not None or empty
+    if not all(values[:2]):
         abort(400, 'Missing data fields')
     return add_data('borrow', required_fields, values)
 
@@ -236,24 +235,6 @@ def add_mess():
         abort(400, 'Missing data fields')
     return add_data('mess', required_fields, values)
 
-# Generic function to add data to any table
-def add_data(table_name, fields, values):
-    query = f"INSERT INTO {table_name} ({', '.join(fields)}) VALUES ({', '.join(['%s'] * len(fields))});"
-    conn = get_db_connection()
-    cursor = conn.cursor()
-    try:
-        cursor.execute(query, values)
-        conn.commit()
-    except psycopg2.IntegrityError as e:
-        conn.rollback()
-        return jsonify({'error': str(e)}), 400
-    except psycopg2.DatabaseError as e:
-        conn.rollback()
-        return jsonify({'error': 'An error occurred: ' + str(e)}), 500
-    finally:
-        cursor.close()
-        conn.close()
-    return jsonify({'success': f'{table_name.capitalize()} added successfully.'}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)

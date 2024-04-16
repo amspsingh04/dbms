@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
     function loadData(endpoint) {
         $.getJSON(endpoint, function(data) {
@@ -43,7 +44,9 @@ $(document).ready(function() {
                 { name: 'studentId', type: 'number', placeholder: 'Student ID' },
                 { name: 'name', type: 'text', placeholder: 'Name' },
                 { name: 'email', type: 'email', placeholder: 'Email' },
-                { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' }
+                { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' },
+                
+                                           
             ],
             'book': [
                 { name: 'isbn', type: 'text', placeholder: 'ISBN' },
@@ -53,12 +56,14 @@ $(document).ready(function() {
             'course': [
                 { name: 'courseId', type: 'number', placeholder: 'Course ID' },
                 { name: 'title', type: 'text', placeholder: 'Course Title' },
-                { name: 'facultyId', type: 'number', placeholder: 'Faculty ID' }
+                { name: 'facultyId', type: 'number', placeholder: 'Faculty ID' },
+                
             ],
             'faculty': [
                 { name: 'facultyId', type: 'number', placeholder: 'Faculty ID' },
-                { name: 'name', type: 'text', placeholder: 'Name' },
-                { name: 'email', type: 'email', placeholder: 'Email' }
+                { name: 'email', type: 'email', placeholder: 'Email' },
+                { name: 'name', type: 'text', placeholder: 'Name' }
+                
             ],
             'menu': [
                 { name: 'day', type: 'text', placeholder: 'Day' },
@@ -76,7 +81,7 @@ $(document).ready(function() {
                 { name: 'requestId', type: 'number', placeholder: 'Request ID' },
                 { name: 'hostelId', type: 'number', placeholder: 'Hostel ID' },
                 { name: 'roomId', type: 'number', placeholder: 'Room ID' },
-                { name: 'request_date', type: 'date', placeholder: 'Request Date' },
+                { name: 'request_date', type: 'text', placeholder: 'Request Date' },
                 { name: 'status', type: 'text', placeholder: 'Status' },
                 { name: 'description', type: 'text', placeholder: 'Description' },
                 { name: 'studentId', type: 'number', placeholder: 'Student ID' }

@@ -38,34 +38,34 @@ def add_data(table_name, fields, values):
 def index():
     return render_template('index.html')
 
-@app.route('/students', methods=['GET'])
-def get_students():
+@app.route('/student', methods=['GET'])
+def get_student():
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM student;')
-    students = cursor.fetchall()
+    student = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(students)
-@app.route('/books', methods=['GET'])
-def get_books():
+    return jsonify(student)
+@app.route('/book', methods=['GET'])
+def get_book():
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM book;')
-    books = cursor.fetchall()
+    book = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(books)
+    return jsonify(book)
 
-@app.route('/courses', methods=['GET'])
-def get_courses():
+@app.route('/course', methods=['GET'])
+def get_course():
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM course;')
-    courses = cursor.fetchall()
+    course = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(courses)
+    return jsonify(course)
 
 @app.route('/faculty', methods=['GET'])
 def get_faculty():
@@ -97,15 +97,15 @@ def get_mess():
     conn.close()
     return jsonify(mess_details)
 
-@app.route('/hostels', methods=['GET'])
-def get_hostels():
+@app.route('/hostel', methods=['GET'])
+def get_hostel():
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM hostel;')
-    hostels = cursor.fetchall()
+    hostel = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(hostels)
+    return jsonify(hostel)
 
 @app.route('/maintenance', methods=['GET'])
 def get_maintenance_requests():
@@ -127,62 +127,56 @@ def get_borrow():
     conn.close()
     return jsonify(borrow_records)
 
-@app.route('/enrollments', methods=['GET'])
-def get_enrollments():
+@app.route('/enrollment', methods=['GET'])
+def get_enrollment():
     conn = get_db_connection()
     cursor = conn.cursor(cursor_factory=RealDictCursor)
     cursor.execute('SELECT * FROM enrollment;')
-    enrollments = cursor.fetchall()
+    enrollment = cursor.fetchall()
     cursor.close()
     conn.close()
-    return jsonify(enrollments)
+    return jsonify(enrollment)
 
 @app.route('/add_student', methods=['POST'])
 def add_student():
     data = request.json
-    required_fields = ['name', 'email', 'hostelId']
+    required_fields = ['studentId','name', 'email', 'hostelId']
     values = [data.get(field) for field in required_fields]
-    if not all(values):
-        abort(400, 'Missing data fields')
+    
     return add_data('student', required_fields, values)
 
 # Route for adding a book
 @app.route('/add_book', methods=['POST'])
 def add_book():
     data = request.json
-    required_fields = ['isbn', 'title', 'author']
+    required_fields = ['isbn', 'title','author']
     values = [data.get(field) for field in required_fields]
-    if not all(values):
-        abort(400, 'Missing data fields')
     return add_data('book', required_fields, values)
 
 # Route for adding a course
 @app.route('/add_course', methods=['POST'])
 def add_course():
     data = request.json
-    required_fields = ['title', 'facultyId']
+    required_fields = ['courseId','title','facultyId']
     values = [data.get(field) for field in required_fields]
-    if not all(values):
-        abort(400, 'Missing data fields')
+    
     return add_data('course', required_fields, values)
 
 @app.route('/add_faculty', methods=['POST'])
 def add_faculty():
     data = request.json
-    required_fields = ['email', 'name']
+    required_fields = ['facultyid','email', 'name']
     values = [data.get(field) for field in required_fields]
-    if not all(values):
-        abort(400, 'Missing data fields')
+    
     return add_data('faculty', required_fields, values)
 
 @app.route('/add_hostel', methods=['POST'])
-def add_menu():
+def add_hostel():
     data = request.json 
     required_fields = ['hostelId', 'name', 'capacity', 'location']
     values = [data.get(field) for field in required_fields]
     # Simplified condition to check for missing values
-    if not all(values):
-        abort(400, 'Missing required data fields')
+    
     return add_data('menu', required_fields, values)
 
 @app.route('/add_menu', methods=['POST'])
@@ -190,19 +184,9 @@ def add_menu():
     data = request.json  # Ensure data is defined
     required_fields = ['day', 'timeOfDay', 'messName', 'items']
     values = [data.get(field) for field in required_fields]
-    # Simplified condition to check for missing values
-    if not all(values):
-        abort(400, 'Missing required data fields')
+    
     return add_data('menu', required_fields, values)
 
-@app.route('/add_hostel', methods=['POST'])
-def add_hostel():
-    data = request.json
-    required_fields = ['name', 'capacity', 'location']
-    values = [data.get(field) for field in required_fields]
-    if not all(values):
-        abort(400, 'Missing data fields')
-    return add_data('hostel', required_fields, values)
 
 # Route for adding a maintenance request
 @app.route('/add_maintenance', methods=['POST'])
@@ -210,8 +194,7 @@ def add_maintenance():
     data = request.json
     required_fields = ['hostelId', 'roomId', 'request_date', 'status', 'description', 'studentId']
     values = [data.get(field) for field in required_fields]
-    if not all(values):
-        abort(400, 'Missing data fields')
+    
     return add_data('maintenance', required_fields, values)
 
 # Route for adding a borrow record
@@ -221,8 +204,7 @@ def add_borrow():
     required_fields = ['isbn', 'studentId', 'dueDate', 'lateFees', 'returnDate']
     values = [data.get(field) for field in required_fields]
     # The original if condition checks that the first two values are not None or empty
-    if not all(values[:2]):
-        abort(400, 'Missing data fields')
+    
     return add_data('borrow', required_fields, values)
 
 # Route for adding an enrollment record
@@ -231,8 +213,7 @@ def add_enrollment():
     data = request.json
     required_fields = ['studentId', 'courseId']
     values = [data.get(field) for field in required_fields]
-    if not all(values):
-        abort(400, 'Missing data fields')
+    
     return add_data('enrollment', required_fields, values)
 
 # Route for adding a mess
@@ -241,8 +222,7 @@ def add_mess():
     data = request.json
     required_fields = ['messName', 'location', 'hostelId']
     values = [data.get(field) for field in required_fields]
-    if not all(values):
-        abort(400, 'Missing data fields')
+    
     return add_data('mess', required_fields, values)
 
 

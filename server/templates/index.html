@@ -1,4 +1,3 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,7 +8,7 @@
 </head>
 <body>
     <h1>University Dashboard</h1>
-    
+
     <select id="data-selector">
         <option value="">Select Data</option>
         <option value="student">Student</option>
@@ -22,7 +21,6 @@
         <option value="maintenance">Maintenance</option>
         <option value="borrow">Borrow</option>
         <option value="enrollment">Enrollment</option>
-        <!-- Add more options as needed -->
     </select>
 
     
@@ -31,25 +29,18 @@
     <table id="data-table">
         <thead>
             <tr>
-                <!-- The table headers will be populated with column names -->
             </tr>
         </thead>
         <tbody>
-            <!-- The table rows will be populated with content -->
         </tbody>
     </table>
 
     <button id="add-data-button" style="display:none;">Add Data</button>
 
-    <!-- The Modal -->
     <div id="add-data-modal" class="modal">
-        <!-- Modal content -->
         <div class="modal-content">
           <span class="close">&times;</span>
           <form id="add-data-form">
-            <!-- Form fields will be populated here based on selection -->
-            
-            <!-- Submit Button -->
             <button type="button" id="submit">Submit</button>
             <input type="submit" id="submit-button" value="Submit Data">
           </form>

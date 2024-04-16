@@ -24,7 +24,7 @@ def add_data(table_name, fields, values):
     try:
         cursor.execute(query, values)
         conn.commit()
-    except psycopg2.IntegrityError as e: # Handle violations of unique constraints, not-null, etc.
+    except psycopg2.IntegrityError as e: 
         conn.rollback()
         return jsonify({'error': str(e)}), 400
     except (Exception, psycopg2.DatabaseError) as e:
@@ -47,6 +47,7 @@ def get_student():
     cursor.close()
     conn.close()
     return jsonify(student)
+
 @app.route('/book', methods=['GET'])
 def get_book():
     conn = get_db_connection()
@@ -145,7 +146,6 @@ def add_student():
     
     return add_data('student', required_fields, values)
 
-# Route for adding a book
 @app.route('/add_book', methods=['POST'])
 def add_book():
     data = request.json
@@ -153,7 +153,6 @@ def add_book():
     values = [data.get(field) for field in required_fields]
     return add_data('book', required_fields, values)
 
-# Route for adding a course
 @app.route('/add_course', methods=['POST'])
 def add_course():
     data = request.json
@@ -174,21 +173,18 @@ def add_faculty():
 def add_hostel():
     data = request.json 
     required_fields = ['hostelId', 'name', 'capacity', 'location']
-    values = [data.get(field) for field in required_fields]
-    # Simplified condition to check for missing values
-    
+    values = [data.get(field) for field in required_fields]    
     return add_data('hostel', required_fields, values)
 
 @app.route('/add_menu', methods=['POST'])
 def add_menu():
-    data = request.json  # Ensure data is defined
+    data = request.json  
     required_fields = ['day', 'timeOfDay', 'messName', 'items']
     values = [data.get(field) for field in required_fields]
     
     return add_data('menu', required_fields, values)
 
 
-# Route for adding a maintenance request
 @app.route('/add_maintenance', methods=['POST'])
 def add_maintenance():
     data = request.json
@@ -197,17 +193,13 @@ def add_maintenance():
     
     return add_data('maintenance', required_fields, values)
 
-# Route for adding a borrow record
 @app.route('/add_borrow', methods=['POST'])
 def add_borrow():
     data = request.json
     required_fields = ['isbn', 'studentId', 'dueDate', 'lateFees', 'returnDate']
-    values = [data.get(field) for field in required_fields]
-    # The original if condition checks that the first two values are not None or empty
-    
+    values = [data.get(field) for field in required_fields]    
     return add_data('borrow', required_fields, values)
 
-# Route for adding an enrollment record
 @app.route('/add_enrollment', methods=['POST'])
 def add_enrollment():
     data = request.json
@@ -216,7 +208,6 @@ def add_enrollment():
     
     return add_data('enrollment', required_fields, values)
 
-# Route for adding a mess
 @app.route('/add_mess', methods=['POST'])
 def add_mess():
     data = request.json

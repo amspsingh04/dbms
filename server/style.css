@@ -1,4 +1,3 @@
-/* /static/css/style.css */
 body {
     font-family: Arial, sans-serif;
 }
@@ -21,7 +20,6 @@ th {
     background-color: #f2f2f2;
 }
 
-/* Add to your existing static/css/style.css file */
 select {
     padding: 10px;
     margin-bottom: 20px;
@@ -31,7 +29,6 @@ select {
     cursor: pointer;
 }
 
-/* Apply similar button styles if you want */
 select:hover {
     background-color: #f7f7f7;
 }

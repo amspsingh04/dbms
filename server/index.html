@@ -1,0 +1,22 @@
+<!-- /templates/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Menu Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <h1>Welcome to Menu Management System</h1>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('get_menu') }}">View Menu</a></li>
+            <!-- Add more navigation items as needed -->
+        </ul>
+    </nav>
+    <!-- Content here -->
+    <footer>
+        <p>Footer content</p>
+    </footer>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -55,28 +55,62 @@ $(document).ready(function() {
 
     // Event handler for 'Add Data' button click
     $('#add-data-button').click(function() {
+        // Clear previous form
+        $('#add-data-form').empty();
+
         // Show the modal window
         $('#add-data-modal').show();
 
-        // Populate the modal with a form based on the selected data type
+        // Logic to add input fields based on the selected data type
         const selectedDataType = $('#data-selector').val();
         if (selectedDataType) {
-            // An example of how you might start a request to get form fields
-            // $.getJSON('/get_form_fields/' + selectedDataType, function(fields) {
-            //     // Generate the form using the fields provided by the server
-            // });
-        }
+            // This is just an example, you'll need endpoint(s) to get form fields dynamically from the backend
+            const formFieldsByDataType = {
+                'students': [
+                    { name: 'name', type: 'text', placeholder: 'Enter name' },
+                    { name: 'email', type: 'email', placeholder: 'Enter email' },
+                    { name: 'hostelId', type: 'number', placeholder: 'Enter Hostel ID' }
+                ],
+                // Define similar structure for other data types...
+            };
 
-        // Rest of the logic to generate the form goes here
+            const fields = formFieldsByDataType[selectedDataType];
+            if (fields) {
+                for (let field of fields) {
+                    let inputHtml = `<label for="${field.name}">${field.placeholder}</label><input type="${field.type}" id="${field.name}" name="${field.name}" required placeholder="${field.placeholder}">`;
+                    $('#add-data-form').append(inputHtml);
+                }
+            }
+        }
     });
 
     // Event handler for 'Submit Data' button click (within the modal form)
-    $('#submit-data-button').click(function() {
-        // Gather the form data and perform the form submission logic here
+    $('#submit-data-button').click(function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        const selectedDataType = $('#data-selector').val();
+        const endpoint = '/add_' + selectedDataType; // Make sure this matches your Flask route
+        const formData = {};
+        
+        $('#add-data-form').find('input').each(function () {
+            formData[$(this).attr('name')] = $(this).val();
+        });
+
+        $.ajax({
+            url: endpoint,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                alert('Data added successfully!');
+                $('#add-data-modal').hide();
+                loadData('/' + selectedDataType); // Reload the data table
+            },
+            error: function(response) {
+                alert('Error adding data: ' + response.responseText);
+            }
+        });
     });
 
-    // When the user clicks on <span> (x), close the modal
-    $('.close').click(function() {
-        $('#add-data-modal').hide();
-    });
+    // Rest of the code
 });

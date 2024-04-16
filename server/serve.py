@@ -1,18 +1,30 @@
-from flask import Flask
-from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, jsonify
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 app = Flask(__name__)
-CORS(app)  
-app.config['MYSQL_HOST'] = 'localhost' 
-app.config['MYSQL_USER'] = 'amspsingh04'
-app.config['MYSQL_PASSWORD'] = 'pass'
-app.config['MYSQL_DB'] = 'db'
 
-@app.route('/')
-def hello():
-    return 'Hello, World!'
+DATABASE = {
+    'database': 'dbms_proj',
+    'user': 'spsin',
+    'password': 's1p2s3p4',
+    'host': 'localhost',
+    'port': '5432',
+}
+
+def get_db_connection():
+    conn = psycopg2.connect(**DATABASE)
+    return conn
+
+@app.route('/students', methods=['GET'])
+def get_students():
+    conn = get_db_connection()
+    cursor = conn.cursor(cursor_factory=RealDictCursor)
+    cursor.execute('SELECT * FROM student;')
+    students = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(students)
 
 if __name__ == '__main__':
-    app.run()
-    CORS(app)
+    app.run(debug=True)

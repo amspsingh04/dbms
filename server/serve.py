@@ -18,7 +18,7 @@ def get_db_connection():
     return conn
 
 def add_data(table_name, fields, values):
-    query = f"INSERT INTO {table_name} ({', '.join(fields)}) VALUES ({', '.join(['%s'] * len(fields))});"
+    query = f"INSERT INTO {table_name} VALUES ({', '.join(['%s'] * len(fields))});"
     conn = get_db_connection()
     cursor = conn.cursor()
     try:
@@ -174,6 +174,16 @@ def add_faculty():
     if not all(values):
         abort(400, 'Missing data fields')
     return add_data('faculty', required_fields, values)
+
+@app.route('/add_hostel', methods=['POST'])
+def add_menu():
+    data = request.json 
+    required_fields = ['hostelId', 'name', 'capacity', 'location']
+    values = [data.get(field) for field in required_fields]
+    # Simplified condition to check for missing values
+    if not all(values):
+        abort(400, 'Missing required data fields')
+    return add_data('menu', required_fields, values)
 
 @app.route('/add_menu', methods=['POST'])
 def add_menu():

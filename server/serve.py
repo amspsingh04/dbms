@@ -38,105 +38,19 @@ def add_data(table_name, fields, values):
 def index():
     return render_template('index.html')
 
-@app.route('/student', methods=['GET'])
-def get_student():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM student;')
-    student = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(student)
+lis=["book","borrow","course","enrollment", "faculty","hostel","maintenance","menu","mess","student"]
 
-@app.route('/book', methods=['GET'])
-def get_book():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM book;')
-    book = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(book)
-
-@app.route('/course', methods=['GET'])
-def get_course():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM course;')
-    course = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(course)
-
-@app.route('/faculty', methods=['GET'])
-def get_faculty():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM faculty;')
-    faculty_members = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(faculty_members)
-
-@app.route('/menu', methods=['GET'])
-def get_menu():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM menu;')
-    menu_items = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(menu_items)
-
-@app.route('/mess', methods=['GET'])
-def get_mess():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM mess;')
-    mess_details = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(mess_details)
-
-@app.route('/hostel', methods=['GET'])
-def get_hostel():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM hostel;')
-    hostel = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(hostel)
-
-@app.route('/maintenance', methods=['GET'])
-def get_maintenance_requests():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM maintenance;')
-    maintenance_requests = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(maintenance_requests)
-
-@app.route('/borrow', methods=['GET'])
-def get_borrow():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM borrow;')
-    borrow_records = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(borrow_records)
-
-@app.route('/enrollment', methods=['GET'])
-def get_enrollment():
-    conn = get_db_connection()
-    cursor = conn.cursor(cursor_factory=RealDictCursor)
-    cursor.execute('SELECT * FROM enrollment;')
-    enrollment = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return jsonify(enrollment)
+@app.route('/<item>', methods=['GET'])
+def get_item(item):
+    # Check if the requested item is in the list
+    if item in lis:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute(f'SELECT * FROM {item};')
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return jsonify(data)
 
 @app.route('/add_student', methods=['POST'])
 def add_student():
@@ -217,6 +131,7 @@ def add_mess():
     return add_data('mess', required_fields, values)
 
 dic={"book":"isbn","borrow":"isbn","course":"courseId","enrollment":"studentId", "faculty":"facultyId","hostel":"hostelId","maintenance":"requestId","menu":"day","mess":"messName","student":"studentId"}
+
 
 
 @app.route('/get_record', methods=['GET'])

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -26,7 +27,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String _serverResponse = '';
+  // Changed _serverResponse to be a map to store parsed JSON response
+  Map<String, dynamic> _record = {};
   String? _selectedTable;
   String? _primaryKeyValue;
 
@@ -45,21 +47,28 @@ class _HomePageState extends State<HomePage> {
 
         if (response.statusCode == 200) {
           setState(() {
-            _serverResponse = response.body;
+            // Parse the JSON response and set the _record map
+            _record = json.decode(response.body);
           });
         } else {
           setState(() {
-            _serverResponse = 'Server error: ${response.statusCode}';
+            // Set _record map to be empty and show error message
+            _record = {};
+            _primaryKeyValue = 'Server error: ${response.statusCode}';
           });
         }
       } catch (e) {
         setState(() {
-          _serverResponse = 'Failed to fetch record: $e';
+          // Set _record map to be empty and show error message
+          _record = {};
+          _primaryKeyValue = 'Failed to fetch record';
         });
       }
     } else {
       setState(() {
-        _serverResponse =
+        // Set _record map to be empty and show error message
+        _record = {};
+        _primaryKeyValue =
             'Please select a table and provide a non-empty primary key value';
       });
     }
@@ -126,10 +135,22 @@ class _HomePageState extends State<HomePage> {
               },
               child: Text('Fetch Record'),
             ),
+            // Modify this Expanded widget to display data
             Expanded(
-              child: SingleChildScrollView(
-                child: Text(_serverResponse),
-              ),
+              child: _record.isNotEmpty
+                  ? ListView.builder(
+                      itemCount: _record.length,
+                      itemBuilder: (context, index) {
+                        String key = _record.keys.elementAt(index);
+                        return ListTile(
+                          title: Text(key),
+                          subtitle: Text(_record[key].toString()),
+                        );
+                      },
+                    )
+                  : Center(
+                      child: Text(_primaryKeyValue ?? 'No record to display'),
+                    ),
             ),
           ],
         ),

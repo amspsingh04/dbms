@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Server Record Fetch',
+      title: 'University Dashboard',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

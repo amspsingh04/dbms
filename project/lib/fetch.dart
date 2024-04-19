@@ -103,7 +103,7 @@ class _FetchDataState extends State<FetchData> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Fetch Data into DataTable'),
+        title: Text('University Dashboard'),
       ),
       body: Column(
         children: <Widget>[

@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Server Record Fetch'),
+        title: Text('University Dashboard'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

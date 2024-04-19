@@ -220,3 +220,20 @@ def add_mess():
 if __name__ == '__main__':
     app.run(debug=True)
 
+dic={"book":"isbn","borrow":"isbn","course":"courseId","enrollment":"studentId", "faculty":"facultyId","hostel":"hostelId","maintenance":"requestId","menu":"day","mess":"messName","student":"studentId"}
+
+@app.route('/get_record', methods=['GET'])
+def get_record():
+    table_name = request.args.get('table_name')
+    primary_key = request.args.get('primary_key')
+    if table_name in dic:
+        primary_key_column = dic[table_name]
+        query = f"SELECT * FROM {table_name} WHERE \"{primary_key_column}\" = %s;"
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
+        cursor.execute(query, (primary_key,))
+        record = cursor.fetchone()
+        cursor.close()
+        conn.close()
+        return jsonify(record)
+        

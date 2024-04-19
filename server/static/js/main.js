@@ -145,3 +145,37 @@ $(document).ready(function() {
         });
     });
 });
+
+$(document).ready(function() {
+    // Attach a click event handler to the search button
+    $('#search-btn').click(function() {
+        // Extract the input values
+        var tableName = $('#table-name-input').val();
+        var primaryKey = $('#primary-key-input').val();
+
+        // If both the table name and primary key are provided, proceed to fetch the record
+        if (tableName && primaryKey) {
+            $.getJSON(`/get_record?table_name=${encodeURIComponent(tableName)}&primary_key=${encodeURIComponent(primaryKey)}`, function(record) {
+                if ($.isEmptyObject(record)) {
+                    // If the returned object is empty, the record was not found
+                    $('#record-output').html('No record found.');
+                } else {
+                    // If a record is found, display it in the record-output div
+                    // Create a simple table to show the record
+                    var outputHtml = '<table>';
+                    $.each(record, function(key, value) {
+                        outputHtml += `<tr><td>${key}</td><td>${value}</td></tr>`;
+                    });
+                    outputHtml += '</table>';
+                    $('#record-output').html(outputHtml);
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                // Handle errors
+                $('#record-output').html('Error: ' + textStatus + ' - ' + errorThrown);
+            });
+        } else {
+            // If inputs are missing, alert the user
+            alert('Please input both table name and primary key.');
+        }
+    });
+});

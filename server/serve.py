@@ -218,6 +218,7 @@ def add_mess():
 
 dic={"book":"isbn","borrow":"isbn","course":"courseId","enrollment":"studentId", "faculty":"facultyId","hostel":"hostelId","maintenance":"requestId","menu":"day","mess":"messName","student":"studentId"}
 
+
 @app.route('/get_record', methods=['GET'])
 def get_record():
     table_name = request.args.get('table_name')

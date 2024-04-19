@@ -10,8 +10,19 @@
     <h1>University Dashboard</h1>
 
     <div id="search">
-      <label for="table-name-input">Table Name:</label>
-      <input type="text" id="table-name-input" placeholder="Enter table name">
+              <select id="table-selector">
+                <option value="">Table Name:</option>
+                <option value="student">Student</option>
+                <option value="book">Book</option>
+                <option value="course">Course</option>
+                <option value="faculty">Faculty</option>
+                <option value="menu">Menu</option>
+                <option value="mess">Mess</option>
+                <option value="hostel">Hostel</option>
+                <option value="maintenance">Maintenance</option>
+                <option value="borrow">Borrow</option>
+                <option value="enrollment">Enrollment</option>
+            </select>
       <label for="primary-key-input">Primary Key:</label>
       <input type="text" id="primary-key-input" placeholder="Enter primary key">
       <button id="search-btn">Search Record</button>

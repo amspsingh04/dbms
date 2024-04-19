@@ -150,7 +150,7 @@ $(document).ready(function() {
     // Attach a click event handler to the search button
     $('#search-btn').click(function() {
         // Extract the input values
-        var tableName = $('#table-name-input').val();
+        var tableName = $('#table-selector').val();
         var primaryKey = $('#primary-key-input').val();
 
         // If both the table name and primary key are provided, proceed to fetch the record
@@ -170,11 +170,9 @@ $(document).ready(function() {
                     $('#record-output').html(outputHtml);
                 }
             }).fail(function(jqXHR, textStatus, errorThrown) {
-                // Handle errors
                 $('#record-output').html('Error: ' + textStatus + ' - ' + errorThrown);
             });
         } else {
-            // If inputs are missing, alert the user
             alert('Please input both table name and primary key.');
         }
     });

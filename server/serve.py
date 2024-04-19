@@ -216,10 +216,6 @@ def add_mess():
     
     return add_data('mess', required_fields, values)
 
-
-if __name__ == '__main__':
-    app.run(debug=True)
-
 dic={"book":"isbn","borrow":"isbn","course":"courseId","enrollment":"studentId", "faculty":"facultyId","hostel":"hostelId","maintenance":"requestId","menu":"day","mess":"messName","student":"studentId"}
 
 @app.route('/get_record', methods=['GET'])
@@ -232,8 +228,13 @@ def get_record():
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=RealDictCursor)
         cursor.execute(query, (primary_key,))
+        print(cursor)
         record = cursor.fetchone()
         cursor.close()
         conn.close()
         return jsonify(record)
         
+
+if __name__ == '__main__':
+    app.run(debug=True)
+

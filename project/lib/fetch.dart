@@ -10,9 +10,14 @@ class FetchData extends StatefulWidget {
 class _FetchDataState extends State<FetchData> {
   String? _selectedTable;
   List<Map<String, dynamic>> _records = [];
+  bool _isFetching = false; // Track if we are currently fetching data
 
   Future<void> _fetchRecordsForTable() async {
     if (_selectedTable != null && _selectedTable!.isNotEmpty) {
+      setState(() {
+        _isFetching = true; // Indicate that fetching has started
+      });
+
       var uri = Uri.parse(
           'https://d557-2401-4900-634a-86ca-b144-3300-50ee-7251.ngrok-free.app/$_selectedTable');
 
@@ -20,17 +25,28 @@ class _FetchDataState extends State<FetchData> {
         final response = await http.get(uri);
 
         if (response.statusCode == 200) {
+          List<dynamic> data = json.decode(response.body);
           setState(() {
-            _records =
-                List<Map<String, dynamic>>.from(json.decode(response.body));
+            _records = data
+                .map<Map<String, dynamic>>(
+                    (item) => item as Map<String, dynamic>)
+                .toList();
+            _isFetching =
+                false; // Reset fetching indicator after data is fetched
           });
         } else {
           // Handle server error
           print('Server error: ${response.statusCode}');
+          setState(() {
+            _isFetching = false;
+          });
         }
       } catch (e) {
         // Handle exception
         print('Failed to fetch records: $e');
+        setState(() {
+          _isFetching = false;
+        });
       }
     } else {
       // Handle user error
@@ -40,7 +56,8 @@ class _FetchDataState extends State<FetchData> {
 
   List<DataColumn> _createColumns() {
     if (_records.isEmpty) {
-      return [];
+      // Show at least an empty message if the list is empty.
+      return [DataColumn(label: Text('No Data'))];
     }
 
     return _records.first.keys
@@ -62,6 +79,28 @@ class _FetchDataState extends State<FetchData> {
 
   @override
   Widget build(BuildContext context) {
+    Widget content;
+
+    if (_isFetching) {
+      content = Center(
+        child:
+            CircularProgressIndicator(), // Show a loading indicator while fetching data
+      );
+    } else if (_records.isEmpty) {
+      content = Center(
+        child: Text(
+            'No records found'), // Message displayed when no records are found (or before fetching)
+      );
+    } else {
+      content = SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columns: _createColumns(),
+          rows: _createRows(),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Fetch Data into DataTable'),
@@ -101,13 +140,7 @@ class _FetchDataState extends State<FetchData> {
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: DataTable(
-                  columns: _createColumns(),
-                  rows: _createRows(),
-                ),
-              ),
+              child: content, // Display content based on the current state
             ),
           ),
         ],
